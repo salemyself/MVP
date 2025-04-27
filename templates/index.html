@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <header>
+        <div class="container">
+            <div class="logo">Проверяй.AI</div>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero">
+            <div class="container">
+                <h1>Проверяй.AI: Освободите время от рутинной проверки работ для науки и студентов!</h1>
+                <p class="mb-2">Интеллектуальный ИИ-помощник для преподавателей вузов, разработанный для оптимизации проверки студенческих письменных работ (эссе, рефераты, курсовые).</p>
+                <a href="#cta" class="btn">Получить уведомление о бета-тестировании</a>
+            </div>
+        </section>
+
+        <section id="chat-demo">
+            <div class="container">
+                <h2>Попробуйте демо-версию</h2>
+                <p class="text-center mb-2" style="max-width: 700px; margin-left: auto; margin-right: auto; color: var(--light-text-color);">
+                    Вставьте текст эссе и критерии проверки, чтобы увидеть пример работы Проверяй.AI.
+                </p>
+
+                <div class="chat-interface">
+                    <form id="chat-form" onsubmit="return submitChatForm(event)">
+                        <div>
+                            <label for="essay-text">Текст эссе:</label>
+                            <textarea id="essay-text" name="essay-text" placeholder="Вставьте сюда текст студенческой работы..." required></textarea>
+                        </div>
+                        <div>
+                            <label for="requirements">Критерии проверки:</label>
+                            <textarea id="requirements" name="requirements" placeholder="Например: проверить на плагиат, соответствие теме, структуру, наличие выводов, грамматику..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn mt-2" id="submit-chat">Отправить на проверку</button>
+                    </form>
+
+                    <div class="chat-output" id="chat-output">
+                        <p class="placeholder">Здесь появятся результаты проверки...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="problem">
+            <div class="container">
+                <h2>Часы на проверку, минуты на обратную связь?</h2>
+                <p>Современный преподаватель сталкивается с огромной нагрузкой. Проверка десятков, а то и сотен эссе, рефератов и курсовых отнимает драгоценное время, которое можно было бы посвятить подготовке лекций, научным исследованиям или индивидуальной работе со студентами. В итоге страдает глубина анализа работ и качество обратной связи.</p>
+            </div>
+        </section>
+
+        <section id="solution">
+            <div class="container">
+                <h2>Как Проверяй.AI изменит вашу работу</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <h3>Экономия времени</h3>
+                        <p>Сократите часы, затрачиваемые на рутинную проверку однотипных ошибок и соответствие базовым критериям.</p>
+                    </div>
+                    <div class="benefit-item">
+                        <h3>Качественная обратная связь</h3>
+                        <p>Автоматически генерируйте подробные комментарии по заданным вами критериям, обеспечивая единообразие и полноту.</p>
+                    </div>
+                    <div class="benefit-item">
+                        <h3>Предварительная проверка</h3>
+                        <p>Быстро оценивайте работы на соответствие формальным требованиям (объем, структура, уникальность) до детального чтения.</p>
+                    </div>
+                    <div class="benefit-item">
+                        <h3>Фокус на важном</h3>
+                        <p>Освободите время и ментальные ресурсы для научной деятельности, разработки курсов и живого общения со студентами.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cta">
+            <div class="container">
+                <h2>Узнайте первыми о запуске бета-тестирования!</h2>
+                <p>Оставьте свой email, и мы пришлем вам уведомление, как только Проверяй.AI с полным функционалом будет готов к тестированию.</p>
+                <form class="cta-form" onsubmit="return submitSubscribeForm(event)">
+                    <input type="email" name="email" placeholder="Ваш рабочий Email" required aria-label="Email для уведомления">
+                    <button type="submit" class="btn">Участвую!</button>
+                </form>
+                <p class="form-note">Мы пришлем вам письмо, как только откроется доступ к демо-версии. Никакого спама, обещаем.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; Проверяй.AI <span id="current-year"></span>. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Скрипт для автоматического обновления года в подвале
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Удалены обработчики форм, так как они теперь в script.js
+    </script>
+{% endblock %}
