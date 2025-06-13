@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Диалог от {{ chat.created_at.strftime('%d.%m.%Y %H:%M') }} - Проверяй.AI{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-layout">
+        <aside class="chat-sidebar">
+            <h3>История диалогов</h3>
+            <div class="chat-history-list">
+                <div class="chat-history-item">
+                    <a href="{{ url_for('chat') }}" style="text-decoration: none; color: inherit; display: block;">
+                        <div class="chat-history-preview" style="text-align: center;">
+                            <strong>← Создать новый диалог</strong>
+                        </div>
+                    </a>
+                </div>
+                {% if chat_history %}
+                    {% for history_chat in chat_history %}
+                    <div class="chat-history-item {% if history_chat.id == chat.id %}active{% endif %}" data-chat-id="{{ history_chat.id }}">
+                        <a href="{{ url_for('view_chat', chat_id=history_chat.id) }}" style="text-decoration: none; color: inherit; display: block;">
+                            <div class="chat-history-date">
+                                {{ history_chat.created_at.strftime('%d.%m.%Y %H:%M') }}
+                            </div>
+                            <div class="chat-history-preview">
+                                <strong>Эссе:</strong> {{ history_chat.short_essay }}<br>
+                                <strong>Требования:</strong> {{ history_chat.short_requirements }}
+                            </div>
+                        </a>
+                        <div style="margin-top: 10px; text-align: right;">
+                            <button onclick="deleteChat({{ history_chat.id }})" class="delete-chat-btn">Удалить</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </aside>
+
+        <main class="chat-main">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2>Диалог от {{ chat.created_at.strftime('%d.%m.%Y в %H:%M') }}</h2>
+                <button onclick="deleteChat({{ chat.id }})" class="btn btn-danger">Удалить диалог</button>
+            </div>
+
+            <div class="chat-output">
+                <p class="user-message">
+                    <strong>Текст эссе:</strong><br>
+                    {{ chat.essay_text }}
+                    <br><br>
+                    <strong>Критерии проверки:</strong><br>
+                    {{ chat.requirements }}
+                    {% if chat.uploaded_files %}
+                    <br><br>
+                    <strong>Загруженные файлы:</strong><br>
+                    <small>{{ chat.uploaded_files }}</small>
+                    {% endif %}
+                </p>
+                
+                <p class="ai-message">
+                    {{ chat.ai_response | safe }}
+                </p>
+            </div>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <a href="{{ url_for('chat') }}" class="btn btn-secondary">Создать новый диалог</a>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Получаем историю чатов для сайдбара
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/chat')
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const historyList = doc.querySelector('.chat-history-list');
+            if (historyList) {
+                const currentHistoryList = document.querySelector('.chat-history-list');
+                // Сохраняем кнопку "Создать новый диалог"
+                const newChatBtn = currentHistoryList.querySelector('.chat-history-item:first-child');
+                currentHistoryList.innerHTML = '';
+                currentHistoryList.appendChild(newChatBtn);
+                
+                // Добавляем остальные элементы истории
+                const historyItems = historyList.querySelectorAll('.chat-history-item');
+                historyItems.forEach(item => {
+                    currentHistoryList.appendChild(item.cloneNode(true));
+                });
+            }
+        })
+        .catch(error => console.error('Ошибка загрузки истории:', error));
+});
+</script>
+{% endblock %}

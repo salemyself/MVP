@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Чат - Проверяй.AI{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-layout">
+        <aside class="chat-sidebar">
+            <h3>История диалогов</h3>
+            <div class="chat-history-list">
+                {% if chat_history %}
+                    {% for chat in chat_history %}
+                    <div class="chat-history-item" data-chat-id="{{ chat.id }}">
+                        <a href="{{ url_for('view_chat', chat_id=chat.id) }}" style="text-decoration: none; color: inherit; display: block;">
+                            <div class="chat-history-date">
+                                {{ chat.created_at.strftime('%d.%m.%Y %H:%M') }}
+                            </div>
+                            <div class="chat-history-preview">
+                                <strong>Эссе:</strong> {{ chat.short_essay }}<br>
+                                <strong>Требования:</strong> {{ chat.short_requirements }}
+                            </div>
+                        </a>
+                        <div style="margin-top: 10px; text-align: right;">
+                            <button onclick="deleteChat({{ chat.id }})" class="delete-chat-btn">Удалить</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="chat-history-item">
+                        <div class="chat-history-preview" style="text-align: center; color: var(--light-text-color);">
+                            История диалогов пуста.<br>
+                            Начните новый диалог справа.
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </aside>
+
+        <main class="chat-main">
+            <h2>Новый диалог</h2>
+            <p style="color: var(--light-text-color); margin-bottom: 2rem;">
+                Введите текст эссе или загрузите файлы, укажите критерии проверки для анализа.
+            </p>
+
+            <form id="chat-form">
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="essay-text">Текст эссе:</label>
+                    <textarea id="essay-text" name="essay-text" placeholder="Вставьте сюда текст студенческой работы..."></textarea>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label>Или загрузите файлы:</label>
+                    <div id="file-upload-area" class="file-upload-area">
+                        <div class="file-upload-icon">📁</div>
+                        <div class="file-upload-text">
+                            <strong>Перетащите файлы сюда</strong> или <strong>нажмите для выбора</strong><br>
+                            <small>Поддерживаются: TXT, PDF, DOC, DOCX, RTF (до 16MB)</small>
+                        </div>
+                        <input type="file" id="file-input" class="file-upload-input" multiple accept=".txt,.pdf,.doc,.docx,.rtf">
+                    </div>
+                    <div id="uploaded-files" class="uploaded-files"></div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="requirements">Критерии проверки:</label>
+                    <textarea id="requirements" name="requirements" placeholder="Например: проверить на плагиат, соответствие теме, структуру, наличие выводов, грамматику..." required></textarea>
+                </div>
+                
+                <button type="submit" class="btn" id="submit-chat">Отправить на проверку</button>
+            </form>
+
+            <div class="chat-output" id="chat-output">
+                <p class="placeholder">Здесь появятся результаты проверки...</p>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
